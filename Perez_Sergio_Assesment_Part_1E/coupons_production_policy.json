@@ -1,0 +1,56 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "AllowS3",
+      "Effect": "Allow",
+      "Action": [
+        "s3:*"
+      ],
+      "Resource": [
+        "arn:aws:s3:::coupons.idealtrip.com/*"
+      ]
+    },
+    {
+      "Sid": "AllowCloudWatch",
+      "Effect": "Allow",
+      "Action": [
+        "logs:*"
+      ],
+      "Resource": [
+        "arn:aws:logs:*:*:log-group:/aws/lambda/*"
+      ]
+    },
+    {
+      "Sid": "AllowKinesis",
+      "Effect": "Allow",
+      "Action": [
+        "kinesis:*"
+      ],
+      "Resource": [
+        "arn:aws:kinesis:*:*:stream/coupons"
+      ]
+    },
+    {
+      "Sid": "AllowSNS",
+      "Effect": "Allow",
+      "Action": [
+        "sns:*"
+      ],
+      "Resource": [
+        "arn:aws:sns:*:*:coupons"
+      ]
+    },
+    {
+      "Sid": "AllowDynamoDB",
+      "Effect": "Allow",
+      "Action": [
+        "dynamodb:*"
+      ],
+      "Resource": [
+        "*"
+      ]
+    }
+  ]
+}
+
