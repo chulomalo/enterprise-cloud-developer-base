@@ -1,0 +1,24 @@
+{
+  "info": {
+    "name": "Coupons API Test",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Get Coupons",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "http://localhost:4566/restapis/tgfc8resik/test/_user_request_/coupons_poc",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "4566",
+          "path": ["restapis", "tgfc8resik", "test", "_user_request_", "coupons_poc"]
+        },
+        "description": "Fetch the list of coupons from the API Gateway"
+      },
+      "response": []
+    }
+  ]
+}
+
