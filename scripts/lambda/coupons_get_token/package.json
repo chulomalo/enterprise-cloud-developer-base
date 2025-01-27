@@ -1,0 +1,13 @@
+{
+    "name": "coupons_get_token",
+    "version": "1.0.0",
+    "description": "Lambda function to get coupons token",
+    "main": "index.js",
+    "dependencies": {
+        "aws-sdk": "^2.1000.0"
+    },
+    "scripts": {
+        "start": "node index.js"
+    }
+}
+

@@ -1,0 +1,13 @@
+{
+    "name": "coupons_update",
+    "version": "1.0.0",
+    "description": "Lambda function to update coupons",
+    "main": "index.js",
+    "dependencies": {
+        "aws-sdk": "^2.1000.0"
+    },
+    "scripts": {
+        "start": "node index.js"
+    }
+}
+

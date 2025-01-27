@@ -1,0 +1,13 @@
+{
+    "name": "coupons_import",
+    "version": "1.0.0",
+    "description": "Lambda function to import coupons",
+    "main": "index.js",
+    "dependencies": {
+        "aws-sdk": "^2.1000.0"
+    },
+    "scripts": {
+        "start": "node index.js"
+    }
+}
+
