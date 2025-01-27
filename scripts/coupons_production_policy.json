@@ -40,7 +40,8 @@
       "Resource": [
         "arn:aws:sns:*:*:coupons"
       ]
-    },{
+    },
+    {
       "Sid": "AllowDynamoDB",
       "Effect": "Allow",
       "Action": [
@@ -52,3 +53,4 @@
     }
   ]
 }
+
