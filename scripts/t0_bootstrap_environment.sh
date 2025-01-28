@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+export AWS_ACCESS_KEY_ID="test"
+export AWS_SECRET_ACCESS_KEY="test"
+export AWS_DEFAULT_REGION="us-east-1"
+
+
 API_NAME="coupons"
 API_BASE_URL="http://localhost:4566"
 REGION="us-east-1"
@@ -18,7 +23,7 @@ POLICY_ARN="arn:aws:iam::000000000000:policy/coupons_production_policy"
 if ! awslocal iam get-policy --policy-arn $POLICY_ARN 2>/dev/null; then
     awslocal iam create-policy \
         --policy-name "coupons_production_policy" \
-        --policy-document file://scripts/coupons_production_policy.json
+        --policy-document file:///Users/sergioperez/Downloads/enterprise-cloud-developer-base/scripts/coupons_production_policy.json
     [ $? == 0 ] || fail 1 "Failed to create production policy"
 else
     echo "Policy already exists, skipping creation"
@@ -33,7 +38,7 @@ ASSUME_ROLE_POLICY_FILE="scripts/coupons_lambda_role_assume_role_policy.json"
 if ! awslocal iam get-role --role-name $ROLE_NAME 2>/dev/null; then
     awslocal iam create-role \
         --role-name $ROLE_NAME \
-        --assume-role-policy-document file://$ASSUME_ROLE_POLICY_FILE
+        --assume-role-policy-document file:///Users/sergioperez/Downloads/enterprise-cloud-developer-base/scripts/coupons_lambda_role_assume_role_policy.json
     [ $? == 0 ] || fail 2 "Failed to create production role"
 else
     echo "Role $ROLE_NAME already exists, skipping creation"
@@ -141,21 +146,56 @@ for FUNCTION_PAIR in "${FUNCTIONS[@]}"; do
 done
 
 echo "Creating REST API"
-API_ID=$(awslocal apigateway create-rest-api --name "${API_NAME}" --query 'id' --output text --region ${REGION})
-ROOT_RESOURCE_ID=$(awslocal apigateway get-resources --rest-api-id ${API_ID} --query 'items[?path==`/`].id' --output text --region ${REGION})
+API_ID=$(awslocal apigateway create-rest-api \
+    --name "${API_NAME}" \
+    --query 'id' \
+    --output text \
+    --region ${REGION})
+[ $? == 0 ] || fail 1 "Failed to create REST API"
+
+ROOT_RESOURCE_ID=$(awslocal apigateway get-resources \
+    --rest-api-id ${API_ID} \
+    --query 'items[?path==`/`].id' \
+    --output text \
+    --region ${REGION})
+[ $? == 0 ] || fail 2 "Failed to retrieve root resource /"
+
 awslocal apigateway create-resource \
     --region ${REGION} \
     --rest-api-id ${API_ID} \
     --parent-id ${ROOT_RESOURCE_ID} \
     --path-part "coupons"
+[ $? == 0 ] || fail 3 "Failed to create /coupons resource"
 
-COUPONS_RESOURCE_ID=$(awslocal apigateway get-resources --rest-api-id ${API_ID} --query 'items[?path==`/coupons`].id' --output text)
+COUPONS_RESOURCE_ID=$(awslocal apigateway get-resources \
+    --rest-api-id ${API_ID} \
+    --query 'items[?path==`/coupons`].id' \
+    --output text \
+    --region ${REGION})
+[ $? == 0 ] || fail 4 "Failed to retrieve /coupons resource ID"
+
 awslocal apigateway create-resource \
     --region ${REGION} \
     --rest-api-id ${API_ID} \
     --parent-id ${COUPONS_RESOURCE_ID} \
     --path-part "{id}"
-COUPONS_GET_BY_ID_LAMBDA_ARN=$(awslocal lambda list-functions --query "Functions[?FunctionName=='coupons_get_by_id'].FunctionArn" --output text)
+[ $? == 0 ] || fail 5 "Failed to create /coupons/{id} resource"
+
+COUPONS_GET_BY_ID_LAMBDA_ARN=$(awslocal lambda list-functions \
+    --query "Functions[?FunctionName=='coupons_get_by_id'].FunctionArn" \
+    --output text)
+[ $? == 0 ] || fail 6 "Failed to retrieve coupons_get_by_id Lambda ARN"
+
+echo "Defining GET method on /coupons"
+awslocal apigateway put-method \
+    --region ${REGION} \
+    --rest-api-id ${API_ID} \
+    --resource-id ${COUPONS_RESOURCE_ID} \
+    --http-method GET \
+    --authorization-type "NONE"
+[ $? == 0 ] || fail 7 "Failed to create GET method on /coupons"
+
+echo "Integrating GET /coupons method with coupons_get_by_id Lambda"
 awslocal apigateway put-integration \
     --region ${REGION} \
     --rest-api-id ${API_ID} \
@@ -164,11 +204,13 @@ awslocal apigateway put-integration \
     --type AWS_PROXY \
     --integration-http-method POST \
     --uri arn:aws:apigateway:${REGION}:lambda:path/2015-03-31/functions/${COUPONS_GET_BY_ID_LAMBDA_ARN}/invocations
+[ $? == 0 ] || fail 8 "Failed to integrate GET /coupons with coupons_get_by_id Lambda"
+
+echo "Deploying the API to stage: ${STAGE}"
 awslocal apigateway create-deployment \
     --region ${REGION} \
     --rest-api-id ${API_ID} \
     --stage-name ${STAGE}
-
-# Add the REST API and related resources (unchanged from your script)
+[ $? == 0 ] || fail 9 "Failed to create deployment"
 
 echo "All tasks completed successfully"

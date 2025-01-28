@@ -1,0 +1,15 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "RequireMFAForDeletion",
+      "Effect": "Deny",
+      "Principal": "*",
+      "Action": "s3:DeleteObject",
+      "Resource": "arn:aws:s3:::coupons/*",
+      "Condition": {
+        "BoolIfExists": {"aws:MultiFactorAuthPresent": false}
+      }
+    }
+  ]
+}
