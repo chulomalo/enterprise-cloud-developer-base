@@ -4,10 +4,13 @@
     "description": "Lambda function to secure coupons",
     "main": "index.js",
     "dependencies": {
-        "aws-sdk": "^2.1000.0"
+        "aws-sdk": "^2.1000.0",
+        "jsonwebtoken": "^9.0.2"
     },
     "scripts": {
         "start": "node index.js"
-    }
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC"
 }
-
