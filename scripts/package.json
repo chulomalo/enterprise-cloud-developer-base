@@ -1,0 +1,10 @@
+{
+  "name": "coupons_list",
+  "version": "1.0.0",
+  "description": "Lambda function for listing coupons",
+  "main": "index.js",
+  "dependencies": {
+    "axios": "^0.27.2"     // example dependency
+  }
+}
+
