@@ -1,0 +1,4 @@
+{
+  "body": "{\"email\": \"test@example.com\", \"subject\": \"Test Subject\", \"message_text\": \"Hello from LocalStack SNS!\"}"
+}
+

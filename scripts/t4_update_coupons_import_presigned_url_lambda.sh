@@ -1,16 +1,15 @@
 #!/bin/bash
-
-# Purpose: Updates the "coupons_import_presigned_url" Lambda function in LocalStack.
-#          Ensures it returns a pre-signed URL for uploading a specific file to the "coupons" bucket.
+# Purpose: Updates the 'coupons_import_presigned_url' Lambda in LocalStack.
 
 ENDPOINT_URL="http://localhost:4566"
 FUNCTION_NAME="coupons_import_presigned_url"
-ZIP_FILE_PATH="./dist/coupons_import_presigned_url.zip"  # Adjust as needed
 
-# 1. Update the Lambda function code
+# Adjust this path to match where your coupons_import_presigned_url.zip is
+ZIP_FILE_PATH="/Users/sergioperez/Downloads/enterprise-cloud-developer-base/lambda_functions/coupons_import_presigned_url.zip"
+
 aws --endpoint-url="$ENDPOINT_URL" lambda update-function-code \
     --function-name "$FUNCTION_NAME" \
     --zip-file "fileb://$ZIP_FILE_PATH"
 
-echo "Updated Lambda function code for '$FUNCTION_NAME'."
+echo "coupons_import_presigned_url lambda updated successfully."
 

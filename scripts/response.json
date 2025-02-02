@@ -1,1 +1,1 @@
-{"statusCode":200,"body":"{\"message\":\"Hello from coupons_import Lambda!\"}"}
+{"errorMessage": "Unable to import module 'coupons_import.coupons_import': No module named 'coupons_import'", "errorType": "Runtime.ImportModuleError", "requestId": "", "stackTrace": []}

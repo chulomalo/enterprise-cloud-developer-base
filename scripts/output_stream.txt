@@ -1,0 +1,1 @@
+{"statusCode":200,"body":"{\"message\":\"coupons_event_publisher executed successfully\"}"}
